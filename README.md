@@ -23,7 +23,6 @@ In your `application.css`, include the css file:
  *= require font-awesome
  */
 ```
-Then restart your webserver if it was previously running.
 
 Congrats! You now have scalable vector icon support. Pick an icon and check out the
 [FontAwesome Examples](http://fortawesome.github.io/Font-Awesome/examples/).
@@ -45,42 +44,40 @@ add this to your `application.css.sass` file:
 @import font-awesome
 ```
 
-### Helpers
+### IE7 Support
 
-There are also some helpers (`fa_icon` and `fa_stacked_icon`) that make your
-views _icontastic!_.
+If you must support IE7, use a
+[conditional comment](http://en.wikipedia.org/wiki/Conditional_comment) to
+provide the `font-awesome-ie7.min.css` stylesheet to Internet Explorer.
 
-```ruby
-fa_icon "camera-retro"
-# => <i class="fa fa-camera-retro"></i>
-
-fa_icon "camera-retro", text: "Take a photo"
-# => <i class="fa fa-camera-retro"></i> Take a photo
-
-fa_icon "quote-left 4x", class: "muted pull-left"
-# => <i class="fa fa-quote-left fa-4x muted pull-left"></i>
-
-content_tag(:li, fa_icon("check li", text: "Bulleted list item"))
-# => <li><i class="fa fa-check fa-li"></i> Bulleted list item</li>
+```rhtml
+<!--[if lt IE 8]>
+<%= stylesheet_link_tag "font-awesome-ie7.min.css", media: "all" %>
+<![endif]-->
 ```
 
-```ruby
-fa_stacked_icon "twitter", base: "square-o"
-# => <span class="fa-stack">
-# =>   <i class="fa fa-square-o fa-stack-2x"></i>
-# =>   <i class="fa fa-twitter fa-stack-1x"></i>
-# => </span>
+In haml, that would look like:
 
-fa_stacked_icon "terminal inverse", base: "square", class: "pull-right", text: "Hi!"
-# => <span class="fa-stack pull-right">
-# =>   <i class="fa fa-square fa-stack-2x"></i>
-# =>   <i class="fa fa-terminal fa-inverse fa-stack-1x"></i>
-# => </span> Hi!
-
+```haml
+/[if lt IE 8]
+  = stylesheet_link_tag "font-awesome-ie7.min.css", media: "all"
 ```
 
-**Note:** In Rails 3.2, make sure font-awesome-rails is outside the bundler asset group
-so that these helpers are automatically loaded in production environments.
+Either way, Make sure that `font-awesome-ie7.min.css` is part of `config.assets.precompile` in your `environments/production.rb`.
+
+```ruby
+config.assets.precompile += %w( font-awesome-ie7.min.css )
+```
+
+Alternatively, if you already have a CSS file provided by a conditional
+comment (say, `application-ie.css`), you can include the ie7 styleshet in
+that:
+
+```css
+/*
+ *= require font-awesome-ie7.min
+ */
+```
 
 ## Changes
 
@@ -103,9 +100,6 @@ so that these helpers are automatically loaded in production environments.
     | 3.2.1.0 | b1a8ad4          | 3.2.1 release (stylesheet fixes)                                          |
     | 3.2.1.1 | b1a8ad4          | renamed Font::Awesome module to FontAwesome to avoid Font name conflicts  |
     | 3.2.1.2 | b1a8ad4          | fixed suffix on svg font url during asset precompilation                  |
-    | 3.2.1.3 | b1a8ad4          | added `fa_icon` and `fa_stacked_icon` view helpers                        |
-    | 4.0.0.0 | 4e92eeb          | 4.0.0 release (new naming conventions, new icons, IE7 support dropped)    |
-    | 4.0.1.0 | c84c8ab          | 4.0.1 release (fixed hdd icon and fa-stack alignment)                     |
 
 **note on version 0.2.0**: FontAwesome now includes scss and sass files, but
 when I used them instead of the plain ol css file included in the project, it
