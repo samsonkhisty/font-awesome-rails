@@ -1,5 +1,5 @@
 module FontAwesome
   module Rails
-    VERSION = "3.2.1.2"
+    VERSION = "4.0.1.0"
   end
 end
