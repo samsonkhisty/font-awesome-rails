@@ -30,7 +30,7 @@ Congrats! You now have scalable vector icon support. Pick an icon and check out 
 
 ### Sass Support
 
-If you prefer [SCSS](http://sass-lang.com/docs.html), add this to your
+If you prefer [SCSS](http://sass-lang.com/documentation/file.SASS_REFERENCE.html), add this to your
 `application.css.scss` file:
 
 ```scss
@@ -106,6 +106,8 @@ so that these helpers are automatically loaded in production environments.
     | 3.2.1.3 | b1a8ad4          | added `fa_icon` and `fa_stacked_icon` view helpers                        |
     | 4.0.0.0 | 4e92eeb          | 4.0.0 release (new naming conventions, new icons, IE7 support dropped)    |
     | 4.0.1.0 | c84c8ab          | 4.0.1 release (fixed hdd icon and fa-stack alignment)                     |
+    | 4.0.3.0 | 0373b63          | 4.0.3 release (minor icon renames and updates)                            |
+    | 4.0.3.1 | 0373b63          | asset pipeline improvements                                               |
 
 **note on version 0.2.0**: FontAwesome now includes scss and sass files, but
 when I used them instead of the plain ol css file included in the project, it
@@ -115,6 +117,45 @@ don't want this gem to require compass for such a trivial thing, so we are
 staying on the vanilla css file for now.
 
 **Running on Rails 3.1?** Make sure to use version 3.1.1.0 or earlier.
+
+**Upgrading from 3.*?** FontAwesome now requires the use of the fa class
+with every icon. Prepend the `fa` class to existing icons:
+
+```css
+  /* FontAwesome 3 Syntax */
+  <i class="icon-github"></i>
+
+  /* FontAwesome 4 Syntax */
+  <i class="fa fa-github"></i>
+```
+
+**Note when deploying to sub-domains**
+It is sometimes the case that deploying a Rails application to a production
+environment requires the application to be hosted at a sub-domain on the server.
+This may be the case, for example, if Apache HTTPD or Nginx is being used as a
+front-end proxy server, with Rails handling only requests that come in to a sub-domain
+such as `http://myserver.example.com/myrailsapp`. In this case, the
+FontAwesome gem (and other asset-serving engines) needs to know the sub-domain,
+otherwise you can experience a problem roughly described as ["my app works
+fine in development, but fails when I deploy
+it"](https://github.com/bokmann/font-awesome-rails/issues/74).
+
+To fix this, set the *relative URL root* for the application. In the
+environment file for the deployed version of the app, for example
+`config/environments/production.rb`,
+set the config option `action_controller.relative_url_root`:
+
+    MyApp::Application.configure do
+      ...
+
+      # set the relative root, because we're deploying to /myrailsapp
+      config.action_controller.relative_url_root  = "/myrailsapp"
+
+      ...
+    end
+
+The default value of this variable is taken from `ENV['RAILS_RELATIVE_URL_ROOT']`,
+so configuring the environment to define `RAILS_RELATIVE_URL_ROOT` is an alternative strategy.
 
 ## License
 
